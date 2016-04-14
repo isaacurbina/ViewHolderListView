@@ -52,13 +52,17 @@ public class MyArrayAdapter extends ArrayAdapter<RelatedTopic> {
 
         // get the TextView and then set the text (item name) and tag (item ID) values
         TextView line1 = (TextView) convertView.findViewById(R.id.firstLine);
+        line1.setText("");
         line1.setText(objectItem.getText());
         TextView line2 = (TextView) convertView.findViewById(R.id.secondLine);
+        line2.setText("");
         line2.setText(objectItem.getFirstURL());
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
+        icon.setImageResource(R.mipmap.ic_launcher);
         try {
             Picasso.with(getContext())
                     .load(objectItem.getIcon().getURL())
+                    .placeholder(R.mipmap.ic_launcher)
                     .into(icon);
         } catch(Exception e) {
             Log.e("MYTAG", "Error loading Picasso image: "+e.getMessage()+e.getStackTrace());
