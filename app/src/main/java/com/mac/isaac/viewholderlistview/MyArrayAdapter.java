@@ -32,31 +32,39 @@ public class MyArrayAdapter extends ArrayAdapter<RelatedTopic> {
         this.data = data;
     }
 
+    static class MyViewHolderItem {
+        TextView line1;
+        TextView line2;
+        ImageView icon;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        /*
-         * The convertView argument is essentially a "ScrapView" as described is Lucas post
-         * http://lucasr.org/2012/04/05/performance-tips-for-androids-listview/
-         * It will have a non-null value when ListView is asking you recycle the row layout.
-         * So, when convertView is not null, you should simply update its contents instead of inflating a new row layout.
-         */
+        MyViewHolderItem myViewHolder;
+
         if(convertView==null){
-            // inflate the layout
+            // inflate the layout if the view doesn't exist
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(layoutResourceId, parent, false);
+            myViewHolder = new MyViewHolderItem();
+            myViewHolder.line1 = (TextView) convertView.findViewById(R.id.first_line);
+            myViewHolder.line2 = (TextView) convertView.findViewById(R.id.second_line);
+            myViewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
+            convertView.setTag(myViewHolder);
+        } else { // if it exists, let's use the ViewHolder pattern
+            myViewHolder = (MyViewHolderItem) convertView.getTag();
         }
 
         // object item based on the position
         RelatedTopic objectItem = data.get(position);
 
         // get the TextView and then set the text (item name) and tag (item ID) values
-        TextView line1 = (TextView) convertView.findViewById(R.id.firstLine);
-        line1.setText("");
-        line1.setText(objectItem.getText());
-        TextView line2 = (TextView) convertView.findViewById(R.id.secondLine);
-        line2.setText("");
-        line2.setText(objectItem.getFirstURL());
+        myViewHolder.line1.setText(objectItem.getText());
+        TextView line2 = (TextView) convertView.findViewById(R.id.second_line);
+        myViewHolder.line2.setText(myViewHolder.line2.getText()+
+                "\n"+
+                objectItem.getFirstURL());
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         icon.setImageResource(R.mipmap.ic_launcher);
         try {
